@@ -34,18 +34,19 @@ def predict():
 
 
         current_df = pd.DataFrame(columns = model_columns)
-        current_df.loc[0] = 0
+        current_df.loc[0] = 0.0
 
         for col, val in input_data.items():
             if col in current_df.columns:
-                current_df[col] = val
+                current_df[col] = float(val)
 
         neighborhood_column = f"Neighborhood_{neighborhood_input}"
         if neighborhood_column in current_df.columns:
-            current_df[neighborhood_column] = 1
+            current_df[neighborhood_column] = 1.0
+
+        current_df = current_df.astype(float)
 
         log_prediction = model.predict(current_df)[0]
-
         real_price = np.expm1(log_prediction)
 
         return jsonify({"predicted_price": round(float(real_price), 2)})
